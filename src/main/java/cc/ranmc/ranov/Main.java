@@ -1,6 +1,6 @@
 package cc.ranmc.ranov;
 
-import cc.ranmc.ranov.bean.Game;
+import cc.ranmc.ranov.game.Game;
 import cc.ranmc.ranov.command.MainCommand;
 import cc.ranmc.ranov.command.MainTabComplete;
 import cc.ranmc.ranov.listener.PlayerListener;

@@ -1,4 +1,4 @@
-package cc.ranmc.ranov.bean;
+package cc.ranmc.ranov.game;
 
 import cc.ranmc.ranov.Main;
 import cc.ranmc.ranov.util.BasicUtil;
