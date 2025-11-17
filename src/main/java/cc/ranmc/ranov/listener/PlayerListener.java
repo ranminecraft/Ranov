@@ -2,6 +2,7 @@ package cc.ranmc.ranov.listener;
 
 import cc.ranmc.ranov.Main;
 import cc.ranmc.ranov.util.BasicUtil;
+import cc.ranmc.ranov.util.GameUtil;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,13 +21,14 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Main.getGame().quit(event.getPlayer());
+        GameUtil.GAME_LIST.forEach(game ->
+                game.quit(event.getPlayer()));
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Main.getGame().dead(event.getEntity().getPlayer());
+        GameUtil.GAME_LIST.forEach(game ->
+                game.dead(event.getEntity().getPlayer()));
     }
-
 
 }

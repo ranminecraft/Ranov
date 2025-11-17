@@ -4,6 +4,7 @@ import cc.ranmc.ranov.game.Game;
 import cc.ranmc.ranov.command.MainCommand;
 import cc.ranmc.ranov.command.MainTabComplete;
 import cc.ranmc.ranov.listener.PlayerListener;
+import cc.ranmc.ranov.util.GameUtil;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static cc.ranmc.ranov.util.BasicUtil.color;
 import static cc.ranmc.ranov.util.BasicUtil.print;
@@ -23,8 +26,13 @@ public class Main extends JavaPlugin implements Listener {
     private YamlConfiguration dataYml, langYml;
     @Getter
     private static Main instance;
-    @Getter
-    private static Game game;
+
+    @Override
+    public void onDisable() {
+        for (Game game : new ArrayList<>(GameUtil.GAME_LIST)) {
+            game.delete();
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -37,7 +45,6 @@ public class Main extends JavaPlugin implements Listener {
         print("&e-----------------------");
 
         loadConfig();
-        game = new Game();
 
         // 注册Event
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);

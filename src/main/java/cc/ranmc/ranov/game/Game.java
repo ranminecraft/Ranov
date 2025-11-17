@@ -2,6 +2,7 @@ package cc.ranmc.ranov.game;
 
 import cc.ranmc.ranov.Main;
 import cc.ranmc.ranov.util.BasicUtil;
+import cc.ranmc.ranov.util.GameUtil;
 import cc.ranmc.ranov.util.WorldUtil;
 import lombok.Data;
 import org.bukkit.Bukkit;
@@ -79,7 +80,6 @@ public class Game {
     public void start() {
         if (playList.size() < plugin.getConfig().getInt("player", 2)) {
             // 人数不足，取消游戏
-            gaming = false;
             Location location = BasicUtil.getLocation(plugin.getConfig().getString("lobby-location"));
             for (String playerName : playList) {
                 Player player = Bukkit.getPlayer(playerName);
@@ -87,7 +87,7 @@ public class Game {
                 player.sendMessage(getLang("wait-cancel"));
                 player.teleport(location);
             }
-            playList.clear();
+            GameUtil.GAME_LIST.remove(this);
             return;
         }
         // 游戏开始
@@ -111,9 +111,13 @@ public class Game {
 
     public void checkGameOver() {
         if (!playList.isEmpty()) return;
-        gaming = false;
+        delete();
+    }
+
+    public void delete() {
         WorldUtil.deleteWorld(warWorld);
         WorldUtil.deleteWorld(waitWorld);
+        GameUtil.GAME_LIST.remove(this);
     }
 
     public void dead(Player player) {

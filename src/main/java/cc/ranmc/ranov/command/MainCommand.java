@@ -1,8 +1,7 @@
 package cc.ranmc.ranov.command;
 
 import cc.ranmc.ranov.Main;
-import cc.ranmc.ranov.util.WorldUtil;
-import org.bukkit.Bukkit;
+import cc.ranmc.ranov.util.GameUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -56,7 +55,7 @@ public class MainCommand implements CommandExecutor {
                 return true;
             }
             if (args[0].equalsIgnoreCase("join")){
-                Main.getGame().join(player);
+                GameUtil.getGame().join(player);
                 return true;
             }
         }
