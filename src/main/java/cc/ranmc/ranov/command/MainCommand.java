@@ -1,6 +1,7 @@
 package cc.ranmc.ranov.command;
 
 import cc.ranmc.ranov.Main;
+import cc.ranmc.ranov.util.ConfigUtil;
 import cc.ranmc.ranov.util.GameUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,13 +31,12 @@ public class MainCommand implements CommandExecutor {
                 return true;
             }*/
             if (args[0].equalsIgnoreCase("reload")){
-                Main.getInstance().loadConfig();
+                ConfigUtil.load();
                 sender.sendMessage(PREFIX + color("&a重载成功"));
                 return true;
             }
             if (args[0].equalsIgnoreCase("help")){
                 sender.sendMessage(PREFIX + color(
-                        "&a感谢你的使用&e\n" +
                                 "/ranov reload 重载插件\n" +
                                 "/ranov help 查看帮助\n" +
                                 "/ranov join 加入匹配队列"));
