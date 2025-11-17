@@ -10,6 +10,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.ArrayList;
+
 public class PlayerListener implements Listener {
 
     @EventHandler
@@ -21,13 +23,13 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        GameUtil.GAME_LIST.forEach(game ->
+        new ArrayList<>(GameUtil.GAME_LIST).forEach(game ->
                 game.quit(event.getPlayer()));
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        GameUtil.GAME_LIST.forEach(game ->
+        new ArrayList<>(GameUtil.GAME_LIST).forEach(game ->
                 game.dead(event.getEntity().getPlayer()));
     }
 
