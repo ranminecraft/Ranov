@@ -2,6 +2,7 @@ package cc.ranmc.ranov.command;
 
 import cc.ranmc.ranov.Main;
 import cc.ranmc.ranov.util.WorldUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,10 @@ public class MainCommand implements CommandExecutor {
         if (sender.hasPermission("ranov.admin") && args.length == 1) {
             /*if (args[0].equalsIgnoreCase("test")){
                 sender.sendMessage(WorldUtil.copyWorldAndLoad("xx").getName());
+                return true;
+            }
+            if (args[0].equalsIgnoreCase("test2")){
+                WorldUtil.deleteWorld(Bukkit.getWorld("xx1"));
                 return true;
             }*/
             if (args[0].equalsIgnoreCase("reload")){

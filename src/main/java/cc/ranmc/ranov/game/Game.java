@@ -92,12 +92,12 @@ public class Game {
         }
         // 游戏开始
         List<String> locationList = plugin.getConfig().getStringList("spawn-location");
-        if (locationList.size() < playList.size()) {
-            print(PREFIX + "&c致命错误，出生位置配置数量不够");
-            return;
-        }
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
         for (String playerName : playList) {
+            if (locationList.isEmpty()) {
+                print(PREFIX + "&c致命错误，出生位置配置数量不够");
+                break;
+            }
             Player player = Bukkit.getPlayer(playerName);
             if (player == null) continue;
             int randomLocation = new Random().nextInt(locationList.size());

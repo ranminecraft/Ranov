@@ -15,12 +15,15 @@ import static cc.ranmc.ranov.util.BasicUtil.print;
 
 public class WorldUtil {
 
-    public static boolean deleteWorld(World world) {
+    public static void deleteWorld(World world) {
         String name = world.getName();
         boolean unloaded = Bukkit.unloadWorld(world, false);
-        if (!unloaded) return false;
+        if (!unloaded) {
+            print(PREFIX + "卸载世界失败 " + name);
+            return;
+        }
         File folder = new File(Bukkit.getWorldContainer(), name);
-        return deleteFolder(folder);
+        deleteFolder(folder);
     }
 
     private static boolean deleteFolder(File file) {
