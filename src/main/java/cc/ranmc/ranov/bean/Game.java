@@ -111,6 +111,7 @@ public class Game {
 
     public void checkGameOver() {
         if (!playList.isEmpty()) return;
+        gaming = false;
         WorldUtil.deleteWorld(warWorld);
         WorldUtil.deleteWorld(waitWorld);
     }
