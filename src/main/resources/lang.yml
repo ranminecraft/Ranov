@@ -1,0 +1,7 @@
+join-fail: "&e当前比赛正在进行,当前无法加入"
+join-cancel: "&e你已取消匹配"
+join: "&e你已加入匹配队列"
+join-ok : "&e匹配成功，即将加入游戏"
+wait: "&e等待%sec%秒即将开始游戏"
+wait-cancel: "&e等待过程中有人离开游戏，游戏已取消，传送至大厅"
+game-on: "&e游戏开始！"
