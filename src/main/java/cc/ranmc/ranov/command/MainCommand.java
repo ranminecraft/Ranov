@@ -1,6 +1,7 @@
 package cc.ranmc.ranov.command;
 
 import cc.ranmc.ranov.Main;
+import cc.ranmc.ranov.util.WorldUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,6 +21,10 @@ public class MainCommand implements CommandExecutor {
                              String[] args) {
 
         if (sender.hasPermission("ranov.admin") && args.length == 1) {
+            /*if (args[0].equalsIgnoreCase("test")){
+                sender.sendMessage(WorldUtil.copyWorldAndLoad("xx").getName());
+                return true;
+            }*/
             if (args[0].equalsIgnoreCase("reload")){
                 Main.getInstance().loadConfig();
                 sender.sendMessage(PREFIX + color("&a重载成功"));
@@ -46,7 +51,7 @@ public class MainCommand implements CommandExecutor {
                 return true;
             }
             if (args[0].equalsIgnoreCase("join")){
-               Main.getGame().join(player);
+                Main.getGame().join(player);
                 return true;
             }
         }

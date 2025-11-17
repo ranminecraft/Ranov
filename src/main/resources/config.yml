@@ -1,17 +1,19 @@
-# 副本世界名称
-world: "world"
+# 等待世界名称（必须在配置文件中放入世界模板）
+wait-world: "wait"
+# 副本世界名称（必须在配置文件中放入世界模板）
+war-world: "war"
 # 人数达到多少人之后开始游戏
 player: 2
 # 完成匹配后倒计时多长时间开始游戏（单位：秒）
 wait-time: 10
 # 大厅位置（世界,x,y,z,yaw,pitch）
 lobby-location: "world,0,100,0,0,0"
-# 等待位置（世界,x,y,z,yaw,pitch）
-wait-location: "world,0,100,0,0,0"
+# 等待位置（x,y,z,yaw,pitch）
+wait-location: "0,100,0,0,0"
 # 出生位置
 # 玩家随机在其中一个出生
 # 注意：配置位置数量必须大于玩家人数
 spawn-location:
-  - "world,100,100,0,0,0"
-  - "world,200,100,0,0,0"
-  - "world,300,100,0,0,0"
+  - "100,100,0,0,0"
+  - "200,100,0,0,0"
+  - "300,100,0,0,0"

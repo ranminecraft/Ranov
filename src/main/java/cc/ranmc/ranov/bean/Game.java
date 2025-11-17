@@ -2,9 +2,11 @@ package cc.ranmc.ranov.bean;
 
 import cc.ranmc.ranov.Main;
 import cc.ranmc.ranov.util.BasicUtil;
+import cc.ranmc.ranov.util.WorldUtil;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
@@ -22,6 +24,7 @@ public class Game {
     private final Main plugin = Main.getInstance();
     private boolean gaming = false;
     private List<String> playList = new ArrayList<>();
+    private World warWorld, waitWorld;
 
     public void join(Player player) {
         if (isGameing(player)) return;
@@ -45,7 +48,10 @@ public class Game {
         }
         // 匹配成功
         gaming = true;
-        Location location = BasicUtil.getLocation(plugin.getConfig().getString("wait-location"));
+        waitWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("wait-world"));
+        Location location = BasicUtil.getLocation(waitWorld.getName() + "," +
+                plugin.getConfig().getString("wait-location"));
+
         for (String playerName : playList) {
             Player player = Bukkit.getPlayer(playerName);
             player.sendMessage(getLang("join-ok"));
@@ -56,18 +62,17 @@ public class Game {
         }
         // 倒计时
         int time = plugin.getConfig().getInt("wait-time", 10);
-        while (time > 0) {
-            time--;
-            int finalTime = time;
-            Bukkit.getScheduler().runTaskLater(plugin, ()-> {
+        for (int i = time; i > 0; i--) {
+            int sec = i;
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 for (String playerName : playList) {
                     Player player = Bukkit.getPlayer(playerName);
                     if (player == null) continue;
                     player.sendMessage(getLang("wait")
-                            .replace("%sec%", String.valueOf(finalTime)));
+                            .replace("%sec%", String.valueOf(sec)));
                 }
-                if (finalTime == 0) start();
-            }, time * 20L);
+                if (sec == 1) start();
+            }, (time - i) * 20L);
         }
     }
 
@@ -87,31 +92,47 @@ public class Game {
         }
         // 游戏开始
         List<String> locationList = plugin.getConfig().getStringList("spawn-location");
-        if (locationList.size() >= playList.size()) {
+        if (locationList.size() < playList.size()) {
             print(PREFIX + "&c致命错误，出生位置配置数量不够");
             return;
         }
+        warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
         for (String playerName : playList) {
             Player player = Bukkit.getPlayer(playerName);
             if (player == null) continue;
             int randomLocation = new Random().nextInt(locationList.size());
-            Location location = BasicUtil.getLocation(locationList.get(randomLocation));
+            Location location = BasicUtil.getLocation(warWorld.getName() + "," +
+                    locationList.get(randomLocation));
             locationList.remove(randomLocation);
             player.teleport(location);
             player.sendMessage(getLang("game-on"));
         }
     }
 
-    public void dead(Player player) {
+    public void checkGameOver() {
+        if (!playList.isEmpty()) return;
+        WorldUtil.deleteWorld(warWorld);
+        WorldUtil.deleteWorld(waitWorld);
+    }
 
+    public void dead(Player player) {
+        if (!isGameing(player)) return;
+        player.sendMessage(getLang("dead"));
+        playList.remove(player.getName());
+        checkGameOver();
     }
 
     public void quit(Player player) {
-
+        if (!isGameing(player)) return;
+        playList.remove(player.getName());
+        checkGameOver();
     }
 
     public void leave(Player player) {
-
+        if (!isGameing(player)) return;
+        playList.remove(player.getName());
+        player.sendMessage(getLang("leave"));
+        checkGameOver();
     }
 
     public boolean isGameing(Player player) {

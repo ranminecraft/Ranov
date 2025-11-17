@@ -64,7 +64,7 @@
                             </relocations>-->
 
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>\users\rain\Desktop\Ranov.jar</outputFile>
+                            <outputFile>\users\rain\Desktop\Paper\plugins\Ranov.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
