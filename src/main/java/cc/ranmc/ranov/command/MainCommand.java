@@ -19,7 +19,6 @@ public class MainCommand implements CommandExecutor {
                              @NotNull String label,
                              String[] args) {
 
-
         if (sender.hasPermission("ranov.admin") && args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")){
                 Main.getInstance().loadConfig();

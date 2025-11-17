@@ -2,6 +2,7 @@ package cc.ranmc.ranov;
 
 import cc.ranmc.ranov.bean.Game;
 import cc.ranmc.ranov.command.MainCommand;
+import cc.ranmc.ranov.command.MainTabComplete;
 import cc.ranmc.ranov.listener.PlayerListener;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -23,7 +24,7 @@ public class Main extends JavaPlugin implements Listener {
     @Getter
     private static Main instance;
     @Getter
-    private static Game game = new Game();
+    private static Game game;
 
     @Override
     public void onEnable() {
@@ -36,12 +37,16 @@ public class Main extends JavaPlugin implements Listener {
         print("&e-----------------------");
 
         loadConfig();
+        game = new Game();
 
         // 注册Event
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 
         // 注册指令
         Bukkit.getPluginCommand("ranov").setExecutor(new MainCommand());
+
+        // 注册指令补全
+        Bukkit.getPluginCommand("ranov").setTabCompleter(new MainTabComplete());
 
         super.onEnable();
     }
