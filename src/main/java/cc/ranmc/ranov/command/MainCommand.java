@@ -20,9 +20,7 @@ public class MainCommand implements CommandExecutor {
                              String[] args) {
 
 
-        if (cmd.getName().equalsIgnoreCase("ranov") &&
-                sender.hasPermission("ranov.admin") &&
-                args.length == 1) {
+        if (sender.hasPermission("ranov.admin") && args.length == 1) {
             if (args[0].equalsIgnoreCase("reload")){
                 Main.getInstance().loadConfig();
                 sender.sendMessage(PREFIX + color("&a重载成功"));
@@ -32,6 +30,7 @@ public class MainCommand implements CommandExecutor {
                 sender.sendMessage(PREFIX + color(
                         "&a感谢你的使用&e\n" +
                                 "/ranov reload 重载插件\n" +
+                                "/ranov help 查看帮助\n" +
                                 "/ranov join 加入匹配队列"));
                 return true;
             }
@@ -42,8 +41,8 @@ public class MainCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        if (cmd.getName().equalsIgnoreCase("ranov")) {
-            if (!sender.hasPermission("ranl.user")) {
+        if (args.length == 1) {
+            if (!sender.hasPermission("ranov.user")) {
                 player.sendMessage(PREFIX + color("&c没有权限"));
                 return true;
             }
