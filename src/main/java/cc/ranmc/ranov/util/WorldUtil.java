@@ -2,6 +2,7 @@ package cc.ranmc.ranov.util;
 
 import cc.ranmc.ranov.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 
@@ -9,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 
 import static cc.ranmc.ranov.Main.PREFIX;
 import static cc.ranmc.ranov.util.BasicUtil.print;
@@ -17,9 +19,13 @@ public class WorldUtil {
 
     public static void deleteWorld(World world) {
         String name = world.getName();
+        Location location = BasicUtil.getLocation(Main.getInstance().getConfig().getString("lobby-location"));
+        new ArrayList<>(world.getPlayers()).forEach(player -> {
+            if (player != null && player.isOnline()) player.teleport(location);
+        });
         boolean unloaded = Bukkit.unloadWorld(world, false);
         if (!unloaded) {
-            print(PREFIX + "卸载世界失败 " + name);
+            Bukkit.getScheduler().runTaskLater(Main.getInstance(), ()-> deleteWorld(world), 10);
             return;
         }
         File folder = new File(Bukkit.getWorldContainer(), name);
