@@ -142,7 +142,7 @@ public class Game {
                 }
                 EntityInstance npc = manager.create(EntityTypes.valueOf(npcInfo[0]), location);
                 npc.setCustomName(color(npcInfo[1]));
-                npc.setId(color(npcInfo[1]));
+                //npc.setId(color(npcInfo[1]));
             } catch (NullPointerException ignored) {
                 print(PREFIX + "&cNPC位置配置错误 " + line);
             }
@@ -155,6 +155,10 @@ public class Game {
     }
 
     public void delete() {
+        Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
+        new ArrayList<>(manager.getEntities()).forEach(npc -> {
+            if (warWorld == npc.getWorld()) npc.remove();
+        });
         WorldUtil.deleteWorld(warWorld);
         WorldUtil.deleteWorld(waitWorld);
         GameUtil.GAME_LIST.remove(this);

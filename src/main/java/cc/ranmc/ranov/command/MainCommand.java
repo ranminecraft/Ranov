@@ -3,6 +3,11 @@ package cc.ranmc.ranov.command;
 import cc.ranmc.ranov.Main;
 import cc.ranmc.ranov.util.ConfigUtil;
 import cc.ranmc.ranov.util.GameUtil;
+import ink.ptms.adyeshach.core.Adyeshach;
+import ink.ptms.adyeshach.core.entity.EntityInstance;
+import ink.ptms.adyeshach.core.entity.EntityTypes;
+import ink.ptms.adyeshach.core.entity.manager.Manager;
+import ink.ptms.adyeshach.core.entity.manager.ManagerType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,8 +27,14 @@ public class MainCommand implements CommandExecutor {
                              String[] args) {
 
         if (sender.hasPermission("ranov.admin") && args.length == 1) {
-            /*if (args[0].equalsIgnoreCase("test")){
-                sender.sendMessage(WorldUtil.copyWorldAndLoad("xx").getName());
+            /*if (args[0].equalsIgnoreCase("test")) {
+                Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
+                Player player = (Player) sender;
+                EntityInstance npc = manager.create(EntityTypes.PLAYER, player.getLocation());
+                npc.setCustomName("TEST1");
+                npc.setCustomNameVisible(true);
+                npc.setId("TEST2");
+                npc.updateEntityMetadata();
                 return true;
             }
             if (args[0].equalsIgnoreCase("test2")){
