@@ -101,19 +101,7 @@ public class Game {
         // 游戏开始
         List<String> locationList = plugin.getConfig().getStringList("spawn-location");
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
-
-        // 创建 NPC
-        Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
-        for (String line : plugin.getConfig().getStringList("spawn-npc")) {
-            String[] npcInfo = line.split(" ");
-            if (npcInfo.length < 3) {
-                print(PREFIX + "&cNPC配置错误 " + line);
-                continue;
-            }
-            Location location = BasicUtil.getLocation(waitWorld.getName() + "," + npcInfo[2]);
-            EntityInstance npc = manager.create(EntityTypes.valueOf(npcInfo[0]), Objects.requireNonNull(location));
-            npc.setCustomName(color(npcInfo[1]));
-        }
+        createNpc();
 
         for (String playerName : playList) {
             if (locationList.isEmpty()) {
@@ -128,6 +116,36 @@ public class Game {
             locationList.remove(randomLocation);
             player.teleport(location);
             player.sendMessage(getLang("game-on"));
+        }
+    }
+
+    private void createNpc() {
+        Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
+        for (String line : plugin.getConfig().getStringList("spawn-npc")) {
+            String[] npcInfo = line.split(" ");
+            if (npcInfo.length < 3) {
+                print(PREFIX + "&cNPC配置错误 " + line);
+                continue;
+            }
+            String[] locationSplit = npcInfo[2].split(",");
+            if (locationSplit.length < 3) {
+                print(PREFIX + "&cNPC位置配置错误 " + line);
+                continue;
+            }
+            try {
+                Location location = new Location(warWorld,
+                        Double.parseDouble(locationSplit[0]),
+                        Double.parseDouble(locationSplit[1]),
+                        Double.parseDouble(locationSplit[2]));
+                if (locationSplit.length >= 5) {
+                    location.setYaw(Float.parseFloat(locationSplit[3]));
+                    location.setPitch(Float.parseFloat(locationSplit[4]));
+                }
+                EntityInstance npc = manager.create(EntityTypes.valueOf(npcInfo[0]), location);
+                npc.setCustomName(color(npcInfo[1]));
+            } catch (NullPointerException ignored) {
+                print(PREFIX + "&cNPC位置配置错误 " + line);
+            }
         }
     }
 
