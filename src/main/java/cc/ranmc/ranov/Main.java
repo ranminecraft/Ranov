@@ -64,6 +64,10 @@ public class Main extends JavaPlugin implements Listener {
         // 注册指令补全
         Bukkit.getPluginCommand("ranov").setTabCompleter(new MainTabComplete());
 
+        // 检查超出撤离时间
+        Bukkit.getScheduler().runTaskTimer(this, ()->
+                GameUtil.GAME_LIST.forEach(Game::checkTimeout), 20, 20);
+
         super.onEnable();
     }
 }

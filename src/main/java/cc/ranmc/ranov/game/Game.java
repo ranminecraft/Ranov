@@ -5,7 +5,6 @@ import cc.ranmc.ranov.util.BasicUtil;
 import cc.ranmc.ranov.util.GameUtil;
 import cc.ranmc.ranov.util.WorldUtil;
 import ink.ptms.adyeshach.core.Adyeshach;
-import ink.ptms.adyeshach.core.AdyeshachAPI;
 import ink.ptms.adyeshach.core.entity.EntityInstance;
 import ink.ptms.adyeshach.core.entity.EntityTypes;
 import ink.ptms.adyeshach.core.entity.manager.Manager;
@@ -19,7 +18,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 import static cc.ranmc.ranov.Main.PREFIX;
@@ -34,6 +32,7 @@ public class Game {
     private boolean gaming = false;
     private List<String> playList = new ArrayList<>();
     private World warWorld, waitWorld;
+    private long startTime = System.currentTimeMillis();
 
     public void join(Player player) {
         if (isGameing(player)) return;
@@ -143,6 +142,7 @@ public class Game {
                 }
                 EntityInstance npc = manager.create(EntityTypes.valueOf(npcInfo[0]), location);
                 npc.setCustomName(color(npcInfo[1]));
+                npc.setId(color(npcInfo[1]));
             } catch (NullPointerException ignored) {
                 print(PREFIX + "&cNPC位置配置错误 " + line);
             }
@@ -158,6 +158,22 @@ public class Game {
         WorldUtil.deleteWorld(warWorld);
         WorldUtil.deleteWorld(waitWorld);
         GameUtil.GAME_LIST.remove(this);
+    }
+
+    public void checkTimeout() {
+        long timeout = Main.getInstance().getConfig().getInt("timeout", 10) * 60 * 1000L;
+        if (startTime + timeout > System.currentTimeMillis()) {
+            Location location = BasicUtil.getLocation(plugin.getConfig().getString("lobby-location"));
+            new ArrayList<>(playList).forEach(playerName -> {
+                Player player = Bukkit.getPlayer(playerName);
+                if (player != null) {
+                    player.sendMessage(getLang("timeout"));
+                    playList.remove(player.getName());
+                    player.teleport(location);
+                }
+            });
+        }
+        delete();
     }
 
     public void dead(Player player) {
