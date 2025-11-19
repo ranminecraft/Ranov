@@ -4,6 +4,12 @@ import cc.ranmc.ranov.Main;
 import cc.ranmc.ranov.util.BasicUtil;
 import cc.ranmc.ranov.util.GameUtil;
 import cc.ranmc.ranov.util.WorldUtil;
+import ink.ptms.adyeshach.core.Adyeshach;
+import ink.ptms.adyeshach.core.AdyeshachAPI;
+import ink.ptms.adyeshach.core.entity.EntityInstance;
+import ink.ptms.adyeshach.core.entity.EntityTypes;
+import ink.ptms.adyeshach.core.entity.manager.Manager;
+import ink.ptms.adyeshach.core.entity.manager.ManagerType;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,9 +19,11 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static cc.ranmc.ranov.Main.PREFIX;
+import static cc.ranmc.ranov.util.BasicUtil.color;
 import static cc.ranmc.ranov.util.BasicUtil.print;
 import static cc.ranmc.ranov.util.LangUtil.getLang;
 
@@ -93,6 +101,20 @@ public class Game {
         // 游戏开始
         List<String> locationList = plugin.getConfig().getStringList("spawn-location");
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
+
+        // 创建 NPC
+        Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
+        for (String line : plugin.getConfig().getStringList("spawn-npc")) {
+            String[] npcInfo = line.split(" ");
+            if (npcInfo.length < 3) {
+                print(PREFIX + "&cNPC配置错误 " + line);
+                continue;
+            }
+            Location location = BasicUtil.getLocation(waitWorld.getName() + "," + npcInfo[2]);
+            EntityInstance npc = manager.create(EntityTypes.valueOf(npcInfo[0]), Objects.requireNonNull(location));
+            npc.setCustomName(color(npcInfo[1]));
+        }
+
         for (String playerName : playList) {
             if (locationList.isEmpty()) {
                 print(PREFIX + "&c致命错误，出生位置配置数量不够");

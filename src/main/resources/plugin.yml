@@ -4,6 +4,8 @@ description: '阿然定制24k纯钛合金超级无敌终终终终极版的Ranov�
 website: https://www.ranmc.cc/
 author: Ranica
 version: ${project.version}
+depend: [Adyeshach]
+softdepend: [PlaceholderAPI]
 
 permissions:
   ranov.user:
