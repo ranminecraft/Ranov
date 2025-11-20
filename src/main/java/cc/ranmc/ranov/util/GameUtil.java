@@ -1,6 +1,7 @@
 package cc.ranmc.ranov.util;
 
 import cc.ranmc.ranov.game.Game;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,15 @@ public class GameUtil {
             GAME_LIST.add(new Game());
         }
         return GAME_LIST.get(GAME_LIST.size() - 1);
+    }
+
+    public static Game getGame(Player player) {
+        for (Game game : GAME_LIST) {
+            if (game.getPlayList().contains(player.getName())) {
+                return game;
+            }
+        }
+        return null;
     }
 
 }
