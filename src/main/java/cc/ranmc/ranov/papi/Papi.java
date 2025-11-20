@@ -1,9 +1,11 @@
 package cc.ranmc.ranov.papi;
 
 
+import cc.ranmc.ranov.Main;
 import cc.ranmc.ranov.game.Game;
 import cc.ranmc.ranov.util.GameUtil;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +27,12 @@ public class Papi extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "ransync";
+        return "ranov";
     }
 
     @Override
     public @NotNull String getVersion() {
-        return "Release";
+        return Main.getInstance().getDescription().getVersion();
     }
 
     @Override
