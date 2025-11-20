@@ -32,7 +32,7 @@ public class Game {
     private boolean gaming = false;
     private List<String> playList = new ArrayList<>();
     private World warWorld, waitWorld;
-    private long startTime;
+    private long endTime;
 
     public void join(Player player) {
         if (isGameing(player)) return;
@@ -98,7 +98,8 @@ public class Game {
             return;
         }
         // 游戏开始
-        startTime = System.currentTimeMillis();
+        endTime = System.currentTimeMillis() +
+                (Main.getInstance().getConfig().getInt("timeout", 10) * 60 * 1000L);
         List<String> locationList = plugin.getConfig().getStringList("spawn-location");
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
         createNpc();
@@ -166,8 +167,7 @@ public class Game {
     }
 
     public void checkTimeout() {
-        long timeout = Main.getInstance().getConfig().getInt("timeout", 10) * 60 * 1000L;
-        if (startTime + timeout > System.currentTimeMillis()) {
+        if (endTime < System.currentTimeMillis()) {
             Location location = BasicUtil.getLocation(plugin.getConfig().getString("lobby-location"));
             new ArrayList<>(playList).forEach(playerName -> {
                 Player player = Bukkit.getPlayer(playerName);
