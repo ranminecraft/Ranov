@@ -18,6 +18,7 @@ import static cc.ranmc.ranov.util.BasicUtil.print;
 public class WorldUtil {
 
     public static void deleteWorld(World world) {
+        if (world == null) return;
         String name = world.getName();
         Location location = BasicUtil.getLocation(Main.getInstance().getConfig().getString("lobby-location"));
         new ArrayList<>(world.getPlayers()).forEach(player -> {
@@ -32,8 +33,8 @@ public class WorldUtil {
         deleteFolder(folder);
     }
 
-    private static boolean deleteFolder(File file) {
-        if (!file.exists()) return true;
+    private static void deleteFolder(File file) {
+        if (!file.exists()) return;
         File[] files = file.listFiles();
         if (files != null) {
             for (File f : files) {
@@ -41,7 +42,7 @@ public class WorldUtil {
                 else f.delete();
             }
         }
-        return file.delete();
+        file.delete();
     }
 
     public static World copyWorldAndLoad(String name) {

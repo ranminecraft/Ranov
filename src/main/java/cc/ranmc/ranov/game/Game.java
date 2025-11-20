@@ -32,7 +32,7 @@ public class Game {
     private boolean gaming = false;
     private List<String> playList = new ArrayList<>();
     private World warWorld, waitWorld;
-    private long endTime;
+    private Long endTime = null;
 
     public void join(Player player) {
         if (isGameing(player)) return;
@@ -167,7 +167,7 @@ public class Game {
     }
 
     public void checkTimeout() {
-        if (endTime < System.currentTimeMillis()) {
+        if (gaming && endTime != null && endTime < System.currentTimeMillis()) {
             Location location = BasicUtil.getLocation(plugin.getConfig().getString("lobby-location"));
             new ArrayList<>(playList).forEach(playerName -> {
                 Player player = Bukkit.getPlayer(playerName);
@@ -177,8 +177,8 @@ public class Game {
                     player.teleport(location);
                 }
             });
+            delete();
         }
-        delete();
     }
 
     public void dead(Player player) {
