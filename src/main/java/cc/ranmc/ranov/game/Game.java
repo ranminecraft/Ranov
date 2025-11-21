@@ -10,11 +10,8 @@ import ink.ptms.adyeshach.core.entity.EntityTypes;
 import ink.ptms.adyeshach.core.entity.manager.Manager;
 import ink.ptms.adyeshach.core.entity.manager.ManagerType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
-import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
-import io.papermc.lib.PaperLib;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -129,7 +126,6 @@ public class Game {
     }
 
     private void createMob() {
-        int delay = 20;
         for (String line : plugin.getConfig().getStringList("spawn-mob")) {
             String[] npcInfo = line.split(" ");
             if (npcInfo.length < 2) {
@@ -148,8 +144,7 @@ public class Game {
                 } else {
                     mob.spawn(BukkitAdapter.adapt(location), 1);
                 }
-            }, delay);
-            delay ++;
+            }, 20);
             //Entity entity = knight.getEntity().getBukkitEntity();
         }
     }
