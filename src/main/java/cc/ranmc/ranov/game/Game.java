@@ -10,15 +10,16 @@ import ink.ptms.adyeshach.core.entity.EntityTypes;
 import ink.ptms.adyeshach.core.entity.manager.Manager;
 import ink.ptms.adyeshach.core.entity.manager.ManagerType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.adapters.AbstractEntity;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.papermc.lib.PaperLib;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class Game {
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
 
         createNpc();
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), this::createMob);
+        createMob();
 
         for (String playerName : playList) {
             if (locationList.isEmpty()) {
@@ -128,6 +129,7 @@ public class Game {
     }
 
     private void createMob() {
+        int delay = 20;
         for (String line : plugin.getConfig().getStringList("spawn-mob")) {
             String[] npcInfo = line.split(" ");
             if (npcInfo.length < 2) {
@@ -139,14 +141,15 @@ public class Game {
                 print("&cMOB位置配置错误 " + line);
                 continue;
             }
-            MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(npcInfo[0]);
-            if (mob == null) {
-                print("&cMOB不存在 " + line);
-                continue;
-            }
-            ActiveMob activeMob = mob.spawn(BukkitAdapter.adapt(location),1);
-            Entity entity = activeMob.getEntity().getBukkitEntity();
-            Bukkit.broadcastMessage(entity.getName() + " 实体uuid " + entity.getUniqueId().toString() + " 位置" + BasicUtil.getLocation(entity.getLocation()));
+            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(npcInfo[0]);
+                if (mob == null) {
+                    print("&cMOB不存在 " + line);
+                } else {
+                    mob.spawn(BukkitAdapter.adapt(location), 1);
+                }
+            }, delay);
+            delay ++;
             //Entity entity = knight.getEntity().getBukkitEntity();
         }
     }

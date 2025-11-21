@@ -8,6 +8,11 @@ import ink.ptms.adyeshach.core.entity.EntityInstance;
 import ink.ptms.adyeshach.core.entity.EntityTypes;
 import ink.ptms.adyeshach.core.entity.manager.Manager;
 import ink.ptms.adyeshach.core.entity.manager.ManagerType;
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
+import io.papermc.lib.PaperLib;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,20 +32,24 @@ public class MainCommand implements CommandExecutor {
                              String[] args) {
 
         if (sender.hasPermission("ranov.admin") && args.length == 1) {
-            /*if (args[0].equalsIgnoreCase("test")) {
-                Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
+            if (args[0].equalsIgnoreCase("test")) {
                 Player player = (Player) sender;
-                EntityInstance npc = manager.create(EntityTypes.PLAYER, player.getLocation());
-                npc.setCustomMeta("playername", "123");
-                npc.updateEntityMetadata();
+                Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                    MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob("xx");
+                    if (mob == null) {
+                        print("&cMOB不存在 xx");
+                    } else {
+                        mob.spawn(BukkitAdapter.adapt(player.getLocation()), 1);
+                    }
+                }, 20);
                 return true;
-            }*/
-            if (args[0].equalsIgnoreCase("reload")){
+            }
+            if (args[0].equalsIgnoreCase("reload")) {
                 ConfigUtil.load();
                 sender.sendMessage(PREFIX + color("&a重载成功"));
                 return true;
             }
-            if (args[0].equalsIgnoreCase("help")){
+            if (args[0].equalsIgnoreCase("help")) {
                 sender.sendMessage(PREFIX + color(
                                 "/ranov reload 重载插件\n" +
                                 "/ranov help 查看帮助\n" +
@@ -59,7 +68,7 @@ public class MainCommand implements CommandExecutor {
                 player.sendMessage(PREFIX + color("&c没有权限"));
                 return true;
             }
-            if (args[0].equalsIgnoreCase("join")){
+            if (args[0].equalsIgnoreCase("join")) {
                 GameUtil.getGame().join(player);
                 return true;
             }

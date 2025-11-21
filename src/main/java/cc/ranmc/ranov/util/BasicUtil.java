@@ -19,21 +19,21 @@ public class BasicUtil {
     /**
      * 文本颜色
      */
-    public static String color(String text){
+    public static String color(String text) {
         return text.replace("&","§");
     }
 
     /**
      * 后台信息
      */
-    public static void print(String msg){
+    public static void print(String msg) {
         Bukkit.getConsoleSender().sendMessage(PREFIX + color(msg));
     }
 
     /**
      * 公屏信息
      */
-    public static void say(String msg){
+    public static void say(String msg) {
         Bukkit.broadcastMessage(color(msg));
     }
 
