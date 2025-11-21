@@ -21,6 +21,10 @@ spawn-location:
 # (类型 名称 位置)
 spawn-npc:
   - 'PLAYER &a测试 0,100,0,0,0'
+# 副本世界创建完成后创建的mob
+# (类型 位置)
+spawn-mob:
+  - 'xx 0,100,0,0,0'
 # 超时时间（单位：分钟）
 timeout: 10
 

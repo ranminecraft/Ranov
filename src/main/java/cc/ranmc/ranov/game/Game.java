@@ -9,6 +9,9 @@ import ink.ptms.adyeshach.core.entity.EntityInstance;
 import ink.ptms.adyeshach.core.entity.EntityTypes;
 import ink.ptms.adyeshach.core.entity.manager.Manager;
 import ink.ptms.adyeshach.core.entity.manager.ManagerType;
+import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,6 +25,7 @@ import java.util.Random;
 
 import static cc.ranmc.ranov.Main.PREFIX;
 import static cc.ranmc.ranov.util.BasicUtil.color;
+import static cc.ranmc.ranov.util.BasicUtil.getLocation;
 import static cc.ranmc.ranov.util.BasicUtil.print;
 import static cc.ranmc.ranov.util.LangUtil.getLang;
 
@@ -102,7 +106,9 @@ public class Game {
                 (Main.getInstance().getConfig().getInt("timeout", 10) * 60 * 1000L);
         List<String> locationList = plugin.getConfig().getStringList("spawn-location");
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
+
         createNpc();
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), this::createMob);
 
         for (String playerName : playList) {
             if (locationList.isEmpty()) {
@@ -120,6 +126,28 @@ public class Game {
         }
     }
 
+    private void createMob() {
+        for (String line : plugin.getConfig().getStringList("spawn-mob")) {
+            String[] npcInfo = line.split(" ");
+            if (npcInfo.length < 2) {
+                print(PREFIX + "&cMOB配置错误 " + line);
+                continue;
+            }
+            Location location = getLocation(warWorld, npcInfo[1]);
+            if (location == null) {
+                print(PREFIX + "&cMOB位置配置错误 " + line);
+                continue;
+            }
+            MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(npcInfo[0]);
+            if (mob == null) {
+                print(PREFIX + "&cMOB不存在 " + line);
+                continue;
+            }
+            mob.spawn(BukkitAdapter.adapt(location),1);
+            //Entity entity = knight.getEntity().getBukkitEntity();
+        }
+    }
+
     private void createNpc() {
         Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
         for (String line : plugin.getConfig().getStringList("spawn-npc")) {
@@ -128,20 +156,12 @@ public class Game {
                 print(PREFIX + "&cNPC配置错误 " + line);
                 continue;
             }
-            String[] locationSplit = npcInfo[2].split(",");
-            if (locationSplit.length < 3) {
+            Location location = getLocation(warWorld, npcInfo[2]);
+            if (location == null) {
                 print(PREFIX + "&cNPC位置配置错误 " + line);
                 continue;
             }
             try {
-                Location location = new Location(warWorld,
-                        Double.parseDouble(locationSplit[0]),
-                        Double.parseDouble(locationSplit[1]),
-                        Double.parseDouble(locationSplit[2]));
-                if (locationSplit.length >= 5) {
-                    location.setYaw(Float.parseFloat(locationSplit[3]));
-                    location.setPitch(Float.parseFloat(locationSplit[4]));
-                }
                 EntityInstance npc = manager.create(EntityTypes.valueOf(npcInfo[0]), location);
                 npc.setCustomName(color(npcInfo[1]));
                 npc.setCustomMeta("playername", color(npcInfo[1]));

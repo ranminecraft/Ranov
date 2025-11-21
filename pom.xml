@@ -54,15 +54,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <!--
-                            重定向依赖地址
-                            <relocations>
-                                <relocation>
-                                    <pattern>cn.hutool</pattern>
-                                    <shadedPattern>cc.ranmc.lib</shadedPattern>
-                                </relocation>
-                            </relocations>-->
-
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <outputFile>\users\rain\Desktop\Paper\plugins\Ranov.jar</outputFile>
                         </configuration>
@@ -102,9 +93,14 @@
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
     </repositories>
 
     <dependencies>
+
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -137,8 +133,7 @@
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.11.7</version>
-            <scope>system</scope>
-            <systemPath>/users/rain/desktop/Project/PlaceholderAPI-2.11.7.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -147,6 +142,14 @@
             <version>2.0.0-snapshot-25</version>
             <scope>system</scope>
             <systemPath>/users/rain/desktop/Project/Adyeshach.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-Dist</artifactId>
+            <version>4.11.1</version>
+            <scope>system</scope>
+            <systemPath>/users/rain/desktop/Project/Mythicmobs-4.11.1.jar</systemPath>
         </dependency>
 
     </dependencies>

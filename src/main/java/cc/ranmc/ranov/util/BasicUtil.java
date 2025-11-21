@@ -46,24 +46,49 @@ public class BasicUtil {
                 location.getPitch();
     }
 
+    public static Location getLocation(World world, String locationStr) {
+        if (world == null || locationStr == null || locationStr.isEmpty()) {
+            BasicUtil.print(PREFIX + color("&c无法获取位置") + locationStr);
+            return null;
+        }
+        String[] locationSplit = locationStr.split(",");
+        if (locationSplit.length < 3) {
+            print(PREFIX + "&c无法获取位置 " + locationStr);
+            return null;
+        }
+        Location location = new Location(world,
+                Double.parseDouble(locationSplit[0]),
+                Double.parseDouble(locationSplit[1]),
+                Double.parseDouble(locationSplit[2]));
+        if (locationSplit.length >= 5) {
+            location.setYaw(Float.parseFloat(locationSplit[3]));
+            location.setPitch(Float.parseFloat(locationSplit[4]));
+        }
+        return location;
+    }
+
     public static Location getLocation(String locationStr) {
         if (locationStr == null || locationStr.isEmpty()) {
             BasicUtil.print(PREFIX + color("&c无法获取位置") + locationStr);
             return null;
         }
-        String[] date = locationStr.split(",");
-        World world = Bukkit.getWorld(date[0]);
+        String[] locationSplit = locationStr.split(",");
+        if (locationSplit.length < 5) {
+            print(PREFIX + "&c无法获取位置 " + locationStr);
+            return null;
+        }
+        World world = Bukkit.getWorld(locationSplit[0]);
         if (world == null) {
-            BasicUtil.print(PREFIX + color("&c不存在世界") + date[0]);
+            BasicUtil.print(PREFIX + color("&c不存在世界") + locationSplit[0]);
             return null;
         }
         Location location = new Location(world,
-                Double.parseDouble(date[1]),
-                Double.parseDouble(date[2]),
-                Double.parseDouble(date[3]));
-        if (date.length == 6) {
-            location.setYaw(Float.parseFloat(date[4]));
-            location.setPitch(Float.parseFloat(date[5]));
+                Double.parseDouble(locationSplit[1]),
+                Double.parseDouble(locationSplit[2]),
+                Double.parseDouble(locationSplit[3]));
+        if (locationSplit.length == 6) {
+            location.setYaw(Float.parseFloat(locationSplit[4]));
+            location.setPitch(Float.parseFloat(locationSplit[5]));
         }
         return location;
     }
