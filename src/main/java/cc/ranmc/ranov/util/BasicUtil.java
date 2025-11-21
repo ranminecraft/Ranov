@@ -46,7 +46,7 @@ public class BasicUtil {
                 location.getPitch();
     }
 
-    public static Location getLocation(World world, String locationStr) {
+    /*public static Location getLocation(World world, String locationStr) {
         if (world == null || locationStr == null || locationStr.isEmpty()) {
             BasicUtil.print("&c无法获取位置" + locationStr);
             return null;
@@ -65,7 +65,7 @@ public class BasicUtil {
             location.setPitch(Float.parseFloat(locationSplit[4]));
         }
         return location;
-    }
+    }*/
 
     public static Location getLocation(String locationStr) {
         if (locationStr == null || locationStr.isEmpty()) {

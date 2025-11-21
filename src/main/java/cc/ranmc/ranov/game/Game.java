@@ -106,23 +106,25 @@ public class Game {
         List<String> locationList = plugin.getConfig().getStringList("spawn-location");
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
 
-        createNpc();
-        createMob();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            createNpc();
+            createMob();
 
-        for (String playerName : playList) {
-            if (locationList.isEmpty()) {
-                print("&c致命错误，出生位置配置数量不够");
-                break;
+            for (String playerName : playList) {
+                if (locationList.isEmpty()) {
+                    print("&c致命错误，出生位置配置数量不够");
+                    break;
+                }
+                Player player = Bukkit.getPlayer(playerName);
+                if (player == null) continue;
+                int randomLocation = new Random().nextInt(locationList.size());
+                Location location = BasicUtil.getLocation(warWorld.getName() + "," +
+                        locationList.get(randomLocation));
+                locationList.remove(randomLocation);
+                player.teleport(location);
+                player.sendMessage(getLang("game-on"));
             }
-            Player player = Bukkit.getPlayer(playerName);
-            if (player == null) continue;
-            int randomLocation = new Random().nextInt(locationList.size());
-            Location location = BasicUtil.getLocation(warWorld.getName() + "," +
-                    locationList.get(randomLocation));
-            locationList.remove(randomLocation);
-            player.teleport(location);
-            player.sendMessage(getLang("game-on"));
-        }
+        }, 20);
     }
 
     private void createMob() {
@@ -132,19 +134,17 @@ public class Game {
                 print("&cMOB配置错误 " + line);
                 continue;
             }
-            Location location = getLocation(warWorld, npcInfo[1]);
+            Location location = getLocation(warWorld.getName() + "," + npcInfo[1]);
             if (location == null) {
                 print("&cMOB位置配置错误 " + line);
                 continue;
             }
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-                MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(npcInfo[0]);
-                if (mob == null) {
-                    print("&cMOB不存在 " + line);
-                } else {
-                    mob.spawn(BukkitAdapter.adapt(location), 1);
-                }
-            }, 20);
+            MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(npcInfo[0]);
+            if (mob == null) {
+                print("&cMOB不存在 " + line);
+            } else {
+                mob.spawn(BukkitAdapter.adapt(location), 1);
+            }
             //Entity entity = knight.getEntity().getBukkitEntity();
         }
     }
@@ -157,7 +157,7 @@ public class Game {
                 print("&cNPC配置错误 " + line);
                 continue;
             }
-            Location location = getLocation(warWorld, npcInfo[2]);
+            Location location = getLocation(warWorld.getName() + "," + npcInfo[2]);
             if (location == null) {
                 print("&cNPC位置配置错误 " + line);
                 continue;
