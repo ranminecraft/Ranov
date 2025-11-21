@@ -144,7 +144,8 @@ public class Game {
                 }
                 EntityInstance npc = manager.create(EntityTypes.valueOf(npcInfo[0]), location);
                 npc.setCustomName(color(npcInfo[1]));
-                //npc.setId(color(npcInfo[1]));
+                npc.setCustomMeta("playername", color(npcInfo[1]));
+                npc.updateEntityMetadata();
             } catch (NullPointerException ignored) {
                 print(PREFIX + "&cNPC位置配置错误 " + line);
             }

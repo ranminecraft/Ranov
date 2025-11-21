@@ -30,7 +30,7 @@ public class ConfigUtil {
         plugin.setLangYml(YamlConfiguration.loadConfiguration(langFile));
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new Papi().register();
+            //new Papi().register();
             print(PREFIX + color("&a成功加载PlaceholderAPI插件"));
         } else {
             print(PREFIX + color("&c无法找到PlaceholderAPI插件"));

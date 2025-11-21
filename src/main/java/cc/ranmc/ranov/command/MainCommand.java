@@ -31,14 +31,8 @@ public class MainCommand implements CommandExecutor {
                 Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
                 Player player = (Player) sender;
                 EntityInstance npc = manager.create(EntityTypes.PLAYER, player.getLocation());
-                npc.setCustomName("TEST1");
-                npc.setCustomNameVisible(true);
-                npc.setId("TEST2");
+                npc.setCustomMeta("playername", "123");
                 npc.updateEntityMetadata();
-                return true;
-            }
-            if (args[0].equalsIgnoreCase("test2")){
-                WorldUtil.deleteWorld(Bukkit.getWorld("xx1"));
                 return true;
             }*/
             if (args[0].equalsIgnoreCase("reload")){
