@@ -70,7 +70,7 @@ public class WorldUtil {
             } else try {
                 Files.copy(file.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
-                print(PREFIX + "复制文件失败 " + file.getName() + ": " + e.getMessage());
+                print("复制文件失败 " + file.getName() + ": " + e.getMessage());
             }
         }
     }

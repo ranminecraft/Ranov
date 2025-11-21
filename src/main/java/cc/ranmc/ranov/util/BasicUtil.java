@@ -27,7 +27,7 @@ public class BasicUtil {
      * 后台信息
      */
     public static void print(String msg){
-        Bukkit.getConsoleSender().sendMessage(color(msg));
+        Bukkit.getConsoleSender().sendMessage(PREFIX + color(msg));
     }
 
     /**
@@ -48,12 +48,12 @@ public class BasicUtil {
 
     public static Location getLocation(World world, String locationStr) {
         if (world == null || locationStr == null || locationStr.isEmpty()) {
-            BasicUtil.print(PREFIX + color("&c无法获取位置") + locationStr);
+            BasicUtil.print("&c无法获取位置" + locationStr);
             return null;
         }
         String[] locationSplit = locationStr.split(",");
         if (locationSplit.length < 3) {
-            print(PREFIX + "&c无法获取位置 " + locationStr);
+            print("&c无法获取位置 " + locationStr);
             return null;
         }
         Location location = new Location(world,
@@ -69,17 +69,17 @@ public class BasicUtil {
 
     public static Location getLocation(String locationStr) {
         if (locationStr == null || locationStr.isEmpty()) {
-            BasicUtil.print(PREFIX + color("&c无法获取位置") + locationStr);
+            BasicUtil.print("&c无法获取位置" + locationStr);
             return null;
         }
         String[] locationSplit = locationStr.split(",");
         if (locationSplit.length < 5) {
-            print(PREFIX + "&c无法获取位置 " + locationStr);
+            print("&c无法获取位置 " + locationStr);
             return null;
         }
         World world = Bukkit.getWorld(locationSplit[0]);
         if (world == null) {
-            BasicUtil.print(PREFIX + color("&c不存在世界") + locationSplit[0]);
+            BasicUtil.print("&c不存在世界" + locationSplit[0]);
             return null;
         }
         Location location = new Location(world,

@@ -11,19 +11,20 @@ import ink.ptms.adyeshach.core.entity.manager.Manager;
 import ink.ptms.adyeshach.core.entity.manager.ManagerType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.adapters.bukkit.BukkitAdapter;
+import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static cc.ranmc.ranov.Main.PREFIX;
 import static cc.ranmc.ranov.util.BasicUtil.color;
 import static cc.ranmc.ranov.util.BasicUtil.getLocation;
 import static cc.ranmc.ranov.util.BasicUtil.print;
@@ -112,7 +113,7 @@ public class Game {
 
         for (String playerName : playList) {
             if (locationList.isEmpty()) {
-                print(PREFIX + "&c致命错误，出生位置配置数量不够");
+                print("&c致命错误，出生位置配置数量不够");
                 break;
             }
             Player player = Bukkit.getPlayer(playerName);
@@ -130,20 +131,22 @@ public class Game {
         for (String line : plugin.getConfig().getStringList("spawn-mob")) {
             String[] npcInfo = line.split(" ");
             if (npcInfo.length < 2) {
-                print(PREFIX + "&cMOB配置错误 " + line);
+                print("&cMOB配置错误 " + line);
                 continue;
             }
             Location location = getLocation(warWorld, npcInfo[1]);
             if (location == null) {
-                print(PREFIX + "&cMOB位置配置错误 " + line);
+                print("&cMOB位置配置错误 " + line);
                 continue;
             }
             MythicMob mob = MythicMobs.inst().getMobManager().getMythicMob(npcInfo[0]);
             if (mob == null) {
-                print(PREFIX + "&cMOB不存在 " + line);
+                print("&cMOB不存在 " + line);
                 continue;
             }
-            mob.spawn(BukkitAdapter.adapt(location),1);
+            ActiveMob activeMob = mob.spawn(BukkitAdapter.adapt(location),1);
+            Entity entity = activeMob.getEntity().getBukkitEntity();
+            Bukkit.broadcastMessage(entity.getName() + " 实体uuid " + entity.getUniqueId().toString() + " 位置" + BasicUtil.getLocation(entity.getLocation()));
             //Entity entity = knight.getEntity().getBukkitEntity();
         }
     }
@@ -153,12 +156,12 @@ public class Game {
         for (String line : plugin.getConfig().getStringList("spawn-npc")) {
             String[] npcInfo = line.split(" ");
             if (npcInfo.length < 3) {
-                print(PREFIX + "&cNPC配置错误 " + line);
+                print("&cNPC配置错误 " + line);
                 continue;
             }
             Location location = getLocation(warWorld, npcInfo[2]);
             if (location == null) {
-                print(PREFIX + "&cNPC位置配置错误 " + line);
+                print("&cNPC位置配置错误 " + line);
                 continue;
             }
             try {
@@ -167,7 +170,7 @@ public class Game {
                 npc.setCustomMeta("playername", color(npcInfo[1]));
                 npc.updateEntityMetadata();
             } catch (NullPointerException ignored) {
-                print(PREFIX + "&cNPC位置配置错误 " + line);
+                print("&cNPC位置配置错误 " + line);
             }
         }
     }

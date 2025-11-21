@@ -7,8 +7,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-import static cc.ranmc.ranov.Main.PREFIX;
-import static cc.ranmc.ranov.util.BasicUtil.color;
 import static cc.ranmc.ranov.util.BasicUtil.print;
 
 public class ConfigUtil {
@@ -31,9 +29,9 @@ public class ConfigUtil {
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new Papi().register();
-            print(PREFIX + color("&a成功加载PlaceholderAPI插件"));
+            print("&a成功加载PlaceholderAPI插件");
         } else {
-            print(PREFIX + color("&c无法找到PlaceholderAPI插件"));
+            print("&c无法找到PlaceholderAPI插件");
         }
     }
 }
