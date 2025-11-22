@@ -3,6 +3,7 @@ package cc.ranmc.ranov;
 import cc.ranmc.ranov.game.Game;
 import cc.ranmc.ranov.command.MainCommand;
 import cc.ranmc.ranov.command.MainTabComplete;
+import cc.ranmc.ranov.listener.AdyeshachListener;
 import cc.ranmc.ranov.listener.PlayerListener;
 import cc.ranmc.ranov.util.ConfigUtil;
 import cc.ranmc.ranov.util.GameUtil;
@@ -57,6 +58,7 @@ public class Main extends JavaPlugin implements Listener {
 
         // 注册Event
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AdyeshachListener(), this);
 
         // 注册指令
         Bukkit.getPluginCommand("ranov").setExecutor(new MainCommand());

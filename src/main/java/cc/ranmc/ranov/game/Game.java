@@ -5,8 +5,10 @@ import cc.ranmc.ranov.util.BasicUtil;
 import cc.ranmc.ranov.util.GameUtil;
 import cc.ranmc.ranov.util.WorldUtil;
 import ink.ptms.adyeshach.core.Adyeshach;
+import ink.ptms.adyeshach.core.AdyeshachEntityControllerRegistry;
 import ink.ptms.adyeshach.core.entity.EntityInstance;
 import ink.ptms.adyeshach.core.entity.EntityTypes;
+import ink.ptms.adyeshach.core.entity.controller.ControllerGenerator;
 import ink.ptms.adyeshach.core.entity.manager.Manager;
 import ink.ptms.adyeshach.core.entity.manager.ManagerType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -20,7 +22,9 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static cc.ranmc.ranov.util.BasicUtil.color;
@@ -36,6 +40,7 @@ public class Game {
     private List<String> playList = new ArrayList<>();
     private World warWorld, waitWorld;
     private Long endTime = null;
+    private Map<String,String> cmdMap = new HashMap<>();
 
     public void join(Player player) {
         if (isGameing(player)) return;
@@ -150,10 +155,10 @@ public class Game {
     }
 
     private void createNpc() {
-        Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.TEMPORARY);
+        Manager manager = Adyeshach.INSTANCE.api().getPublicEntityManager(ManagerType.PERSISTENT);
         for (String line : plugin.getConfig().getStringList("spawn-npc")) {
             String[] npcInfo = line.split(" ");
-            if (npcInfo.length < 3) {
+            if (npcInfo.length < 4) {
                 print("&cNPC配置错误 " + line);
                 continue;
             }
@@ -167,6 +172,12 @@ public class Game {
                 npc.setCustomName(color(npcInfo[1]));
                 npc.setCustomMeta("playername", color(npcInfo[1]));
                 npc.updateEntityMetadata();
+                StringBuilder builder = new StringBuilder();
+                for (int i = 3; i < npcInfo.length; i++) {
+                    builder.append(npcInfo[i]).append(" ");
+                }
+                if (builder.length() > 0) builder.deleteCharAt(builder.length() - 1);
+                cmdMap.put(npc.getUniqueId(), builder.toString());
             } catch (NullPointerException ignored) {
                 print("&cNPC位置配置错误 " + line);
             }
