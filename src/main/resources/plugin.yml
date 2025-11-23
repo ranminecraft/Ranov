@@ -20,3 +20,7 @@ commands:
   ranov:
     description: ranov
     usage: /<command>
+
+  team:
+    description: team
+    usage: /<command>

@@ -1,5 +1,7 @@
 package cc.ranmc.ranov;
 
+import cc.ranmc.ranov.command.TeamCommand;
+import cc.ranmc.ranov.command.TeamTabComplete;
 import cc.ranmc.ranov.game.Game;
 import cc.ranmc.ranov.command.MainCommand;
 import cc.ranmc.ranov.command.MainTabComplete;
@@ -62,9 +64,11 @@ public class Main extends JavaPlugin implements Listener {
 
         // 注册指令
         Bukkit.getPluginCommand("ranov").setExecutor(new MainCommand());
+        Bukkit.getPluginCommand("team").setExecutor(new TeamCommand());
 
         // 注册指令补全
         Bukkit.getPluginCommand("ranov").setTabCompleter(new MainTabComplete());
+        Bukkit.getPluginCommand("team").setTabCompleter(new TeamTabComplete());
 
         // 检查超出撤离时间
         Bukkit.getScheduler().runTaskTimer(this, ()->
