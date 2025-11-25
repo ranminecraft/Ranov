@@ -47,7 +47,7 @@ public class Game {
     private Map<String,String> leavingMap = new HashMap<>();
 
     public void join(Player player) {
-        if (isGameing(player)) return;
+        if (player == null || isGameing(player)) return;
         if (gaming) {
             player.sendMessage(getLang("join-fail"));
             return;
@@ -122,8 +122,8 @@ public class Game {
                 print("&c撤离点配置错误" + line);
                 continue;
             }
-            Location start = getLocation(lineSplit[0]);
-            Location end = getLocation(lineSplit[1]);
+            Location start = getLocation(warWorld.getName() + "," + lineSplit[0]);
+            Location end = getLocation(warWorld.getName() + "," + lineSplit[1]);
             if (start == null || end == null) {
                 print("&c撤离点配置错误" + line);
                 continue;

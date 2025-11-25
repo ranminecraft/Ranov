@@ -1,17 +1,18 @@
 package cc.ranmc.ranov.listener;
 
 import cc.ranmc.ranov.Main;
+import cc.ranmc.ranov.game.Game;
 import cc.ranmc.ranov.util.BasicUtil;
 import cc.ranmc.ranov.util.GameUtil;
+import cc.ranmc.ranov.util.TeamUtil;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.util.ArrayList;
 
 public class PlayerListener implements Listener {
 
@@ -24,20 +25,27 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        new ArrayList<>(GameUtil.GAME_LIST).forEach(game ->
-                game.move(event.getPlayer(), event.getTo()));
+        Player player = event.getPlayer();
+        Game game = GameUtil.getGame(player);
+        if (game == null) return;
+        game.move(player, event.getTo());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        new ArrayList<>(GameUtil.GAME_LIST).forEach(game ->
-                game.quit(event.getPlayer()));
+        Player player = event.getPlayer();
+        TeamUtil.quit(player);
+        Game game = GameUtil.getGame(player);
+        if (game == null) return;
+        game.quit(player);
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        new ArrayList<>(GameUtil.GAME_LIST).forEach(game ->
-                game.dead(event.getEntity().getPlayer()));
+        Player player = event.getEntity().getPlayer();
+        Game game = GameUtil.getGame(player);
+        if (game == null) return;
+        game.quit(player);
     }
 
 }

@@ -50,7 +50,7 @@ public class MainCommand implements CommandExecutor {
                 return true;
             }
             if (args[0].equalsIgnoreCase("join")) {
-                GameUtil.getGame().join(player);
+                GameUtil.join(player);
                 return true;
             }
         }

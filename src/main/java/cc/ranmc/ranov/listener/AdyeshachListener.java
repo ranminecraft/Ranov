@@ -19,25 +19,24 @@ public class AdyeshachListener implements Listener {
     public void onAdyeshachEntityInteractEvent(AdyeshachEntityInteractEvent event) {
         String uuid = event.getEntity().getUniqueId();
         Player player = event.getPlayer();
+        Game game = GameUtil.getGame(player);
+        if (game == null) return;
         long now = System.currentTimeMillis();
-        for (Game game : GameUtil.GAME_LIST) {
-            if (game.getCmdMap().containsKey(uuid)) {
-                if (cdMap.getOrDefault(player.getName(), 0L) + 100 > now) break;
-                event.getPlayer().chat("/" + game.getCmdMap().get(uuid));
-                cdMap.put(player.getName(), now);
-                break;
-            }
+        if (game.getCmdMap().containsKey(uuid)) {
+            if (cdMap.getOrDefault(player.getName(), 0L) + 100 > now) return;
+            event.getPlayer().chat("/" + game.getCmdMap().get(uuid));
+            cdMap.put(player.getName(), now);
         }
     }
 
     @EventHandler
     public void onAdyeshachEntityDamageEvent(AdyeshachEntityDamageEvent event) {
+        Player player = event.getPlayer();
+        Game game = GameUtil.getGame(player);
+        if (game == null) return;
         String uuid = event.getEntity().getUniqueId();
-        for (Game game : GameUtil.GAME_LIST) {
-            if (game.getCmdMap().containsKey(uuid)) {
-                event.getPlayer().chat("/" + game.getCmdMap().get(uuid));
-                break;
-            }
+        if (game.getCmdMap().containsKey(uuid)) {
+            event.getPlayer().chat("/" + game.getCmdMap().get(uuid));
         }
     }
 

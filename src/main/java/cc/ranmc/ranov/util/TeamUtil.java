@@ -1,6 +1,7 @@
 package cc.ranmc.ranov.util;
 
 import cc.ranmc.ranov.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -176,7 +177,7 @@ public class TeamUtil {
         }
 
         // 情况3：sender 无队伍 → sender 加入 target 队伍
-        if (requesterTeam == null && targetTeam != null) {
+        if (requesterTeam == null) {
 
             if (targetTeam.members.size() >= teamMax) {
                 target.sendMessage(PREFIX + color("&c你的队伍人数已达上限 " + teamMax));
@@ -249,6 +250,10 @@ public class TeamUtil {
         if (id != null) {
             playerTeamMap.put(player, id);
         }
+        t.members.forEach(memberName -> {
+            Player member = Bukkit.getPlayer(memberName);
+            if (member != null) member.sendMessage(player + "已加入到队伍中");
+        });
     }
 
     private static void disbandTeam(Team t, String leader) {
