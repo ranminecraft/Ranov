@@ -29,4 +29,8 @@ spawn-mob:
 timeout: 10
 # 小队最大成员数量
 team-max: 3
-
+# 撤离位置
+leave-location:
+  - "100,100,0 102,102,2"
+# 站在撤离点需要等待多久撤离（单位：秒）
+leave-wait-time: 3

@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.ArrayList;
@@ -19,6 +20,12 @@ public class PlayerListener implements Listener {
         // 玩家加入服务器传送到大厅
         Location location = BasicUtil.getLocation(Main.getInstance().getConfig().getString("lobby-location"));
         if (location != null) event.getPlayer().teleport(location);
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        new ArrayList<>(GameUtil.GAME_LIST).forEach(game ->
+                game.move(event.getPlayer(), event.getTo()));
     }
 
     @EventHandler

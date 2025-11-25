@@ -1,14 +1,13 @@
 package cc.ranmc.ranov.game;
 
 import cc.ranmc.ranov.Main;
+import cc.ranmc.ranov.bean.Area;
 import cc.ranmc.ranov.util.BasicUtil;
 import cc.ranmc.ranov.util.GameUtil;
 import cc.ranmc.ranov.util.WorldUtil;
 import ink.ptms.adyeshach.core.Adyeshach;
-import ink.ptms.adyeshach.core.AdyeshachEntityControllerRegistry;
 import ink.ptms.adyeshach.core.entity.EntityInstance;
 import ink.ptms.adyeshach.core.entity.EntityTypes;
-import ink.ptms.adyeshach.core.entity.controller.ControllerGenerator;
 import ink.ptms.adyeshach.core.entity.manager.Manager;
 import ink.ptms.adyeshach.core.entity.manager.ManagerType;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -17,8 +16,11 @@ import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -41,6 +43,8 @@ public class Game {
     private World warWorld, waitWorld;
     private Long endTime = null;
     private Map<String,String> cmdMap = new HashMap<>();
+    private List<Area> leavaLocationList = new ArrayList<>();
+    private Map<String,String> leavingMap = new HashMap<>();
 
     public void join(Player player) {
         if (isGameing(player)) return;
@@ -110,6 +114,22 @@ public class Game {
                 (Main.getInstance().getConfig().getInt("timeout", 10) * 60 * 1000L);
         List<String> locationList = plugin.getConfig().getStringList("spawn-location");
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
+
+        // 加载撤离点
+        for (String line : plugin.getConfig().getStringList("leave-location")) {
+            String[] lineSplit = line.split(" ");
+            if (lineSplit.length != 2) {
+                print("&c撤离点配置错误" + line);
+                continue;
+            }
+            Location start = getLocation(lineSplit[0]);
+            Location end = getLocation(lineSplit[1]);
+            if (start == null || end == null) {
+                print("&c撤离点配置错误" + line);
+                continue;
+            }
+            leavaLocationList.add(new Area(start, end));
+        }
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             createNpc();
@@ -218,12 +238,14 @@ public class Game {
         if (!isGameing(player)) return;
         player.sendMessage(getLang("dead"));
         playList.remove(player.getName());
+        deadBox(player);
         checkGameOver();
     }
 
     public void quit(Player player) {
         if (!isGameing(player)) return;
         playList.remove(player.getName());
+        deadBox(player);
         checkGameOver();
     }
 
@@ -236,6 +258,35 @@ public class Game {
 
     public boolean isGameing(Player player) {
         return gaming && playList.contains(player.getName());
+    }
+
+    public void move(Player player, Location location) {
+        if (!isGameing(player)) return;
+        if (leavingMap.containsKey(player.getName())) return;
+        for (Area area : leavaLocationList) {
+            if (area.inArea(location)) {
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    leavingMap.remove(player.getName());
+                    if (!leavaLocationList.contains(area)) return;
+                    leavaLocationList.remove(area);
+                    if (area.inArea(player.getLocation())) leave(player);
+                }, plugin.getConfig().getInt("leave-wait-time", 3) * 20L);
+            }
+        }
+    }
+
+    public void deadBox(Player player) {
+        Location location = player.getLocation();
+        Block block = location.getBlock();
+        location.getBlock().setType(Material.CHEST);
+        if (block.getState() instanceof Chest) {
+            Chest chest = (Chest) block.getState();
+            chest.setCustomName(player.getName() + " 的死亡物品");
+            for (int i = 0; i < 27; i++) {
+                chest.getInventory().setItem(i, player.getInventory().getItem(i + 9));
+            }
+        }
+        player.getInventory().clear();
     }
 
 }
