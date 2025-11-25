@@ -34,3 +34,5 @@ leave-location:
   - "100,100,0 102,102,2"
 # 站在撤离点需要等待多久撤离（单位：秒）
 leave-wait-time: 3
+# 游戏开始多长时间之后开启撤离点（单位：秒）
+leave-start-time: 120

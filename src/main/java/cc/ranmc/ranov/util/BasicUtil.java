@@ -73,7 +73,7 @@ public class BasicUtil {
             return null;
         }
         String[] locationSplit = locationStr.split(",");
-        if (locationSplit.length < 5) {
+        if (locationSplit.length < 4) {
             print("&c无法获取位置 " + locationStr);
             return null;
         }

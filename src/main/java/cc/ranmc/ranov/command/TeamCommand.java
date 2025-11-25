@@ -38,6 +38,12 @@ public class TeamCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("quit")) {
+                TeamUtil.quit(player);
+                return true;
+            }
+        }
         if (args.length == 2) {
             if (!sender.hasPermission("ranov.user")) {
                 player.sendMessage(PREFIX + color("&c没有权限"));
@@ -54,10 +60,6 @@ public class TeamCommand implements CommandExecutor {
             }
             if (args[0].equalsIgnoreCase("invite")) {
                 TeamUtil.join(player, target);
-                return true;
-            }
-            if (args[0].equalsIgnoreCase("quit")) {
-                TeamUtil.quit(player);
                 return true;
             }
             if (args[0].equalsIgnoreCase("accept")) {

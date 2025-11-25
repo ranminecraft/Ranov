@@ -116,20 +116,27 @@ public class Game {
         warWorld = WorldUtil.copyWorldAndLoad(plugin.getConfig().getString("war-world"));
 
         // 加载撤离点
-        for (String line : plugin.getConfig().getStringList("leave-location")) {
-            String[] lineSplit = line.split(" ");
-            if (lineSplit.length != 2) {
-                print("&c撤离点配置错误" + line);
-                continue;
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            for (String line : plugin.getConfig().getStringList("leave-location")) {
+                String[] lineSplit = line.split(" ");
+                if (lineSplit.length != 2) {
+                    print("&c撤离点配置错误" + line);
+                    continue;
+                }
+                Location start = getLocation(warWorld.getName() + "," + lineSplit[0]);
+                Location end = getLocation(warWorld.getName() + "," + lineSplit[1]);
+                if (start == null || end == null) {
+                    print("&c撤离点配置错误" + line);
+                    continue;
+                }
+                leavaLocationList.add(new Area(start, end));
             }
-            Location start = getLocation(warWorld.getName() + "," + lineSplit[0]);
-            Location end = getLocation(warWorld.getName() + "," + lineSplit[1]);
-            if (start == null || end == null) {
-                print("&c撤离点配置错误" + line);
-                continue;
+            for (String playerName : playList) {
+                Player target = Bukkit.getPlayer(playerName);
+                if (target == null) continue;
+                target.sendMessage("撤离点已经开启");
             }
-            leavaLocationList.add(new Area(start, end));
-        }
+        }, plugin.getConfig().getInt("leave-start-time", 120) * 20L);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             createNpc();

@@ -14,30 +14,26 @@ public class GameUtil {
 
     public static void join(Player player) {
         TeamUtil.Team team = TeamUtil.getTeam(player.getName());
-        int teamMemberSize = 1;
-        if (team != null) teamMemberSize = team.members.size();
-        if (GAME_LIST.isEmpty() ||
-                GAME_LIST.get(GAME_LIST.size() - 1).isGaming() ||
-                (Main.getInstance().getConfig().getInt("player", 2) - GAME_LIST.get(GAME_LIST.size() - 1).getPlayList().size()) < teamMemberSize) {
-            GAME_LIST.add(new Game());
-            if (team != null) {
-                team.members.forEach(member ->
-                        GAME_LIST.get(GAME_LIST.size() - 1).join(Bukkit.getPlayer(member)));
-                return;
+        Game game = null;
+        for (Game g : GAME_LIST) {
+            if (!g.isGaming() && (Main.getInstance().getConfig().getInt("player", 2) -
+                    GAME_LIST.get(GAME_LIST.size() - 1).getPlayList().size()) >=
+                    (team == null ? 1 : team.members.size())) {
+                game = g;
+                break;
             }
         }
-        GAME_LIST.get(GAME_LIST.size() - 1).join(player);
-    }
-
-    public static Game getGame() {
-        if (GAME_LIST.isEmpty()) {
-            GAME_LIST.add(new Game());
-            return GAME_LIST.get(0);
+        if (game == null) {
+            game = new Game();
+            GAME_LIST.add(game);
         }
-        if (GAME_LIST.get(GAME_LIST.size() - 1).isGaming()) {
-            GAME_LIST.add(new Game());
+        if (team != null) {
+            Game finalGame = game;
+            team.members.forEach(member ->
+                    finalGame.join(Bukkit.getPlayer(member)));
+        } else {
+            game.join(player);
         }
-        return GAME_LIST.get(GAME_LIST.size() - 1);
     }
 
     public static Game getGame(Player player) {
