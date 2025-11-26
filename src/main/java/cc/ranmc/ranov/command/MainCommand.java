@@ -23,6 +23,7 @@ public class MainCommand implements CommandExecutor {
         if (sender.hasPermission("ranov.admin") && args.length == 1) {
             if (args[0].equalsIgnoreCase("test")) {
                 Player player = (Player) sender;
+
                 return true;
             }
             if (args[0].equalsIgnoreCase("reload")) {

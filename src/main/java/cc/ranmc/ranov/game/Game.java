@@ -176,7 +176,7 @@ public class Game {
             Chest chest = (Chest) block.getState();
             chest.setCustomName(chestInfo[1]);
             Inventory inv = chest.getInventory().getHolder().getInventory();
-            getChestItem(chestInfo[0]).forEach(inv::addItem);
+            getChestItem(chestInfo[1]).forEach(inv::addItem);
             chest.update();
         }
     }
@@ -187,12 +187,11 @@ public class Game {
             try {
                 String[] itemInfo = line.split(" ");
                 if (Double.parseDouble(itemInfo[1]) < Math.random()) continue;
-                MythicMobs.inst().getMobManager().getMythicMob("");
                 ItemStack item = MythicMobs.inst().getItemManager().getItemStack(itemInfo[0]);
                 String[] parts = itemInfo[2].split("~");
                 int min = Integer.parseInt(parts[0].trim());
                 int max = Integer.parseInt(parts[1].trim());
-                item.setAmount((int) (Math.random() * (max - min + 1)) + min);
+                item.setAmount((int) ((Math.random() * (max - min + 1)) + min));
                 list.add(item);
             } catch (Exception e) {
                 print("&cCHEST配置错误 " + line + " 错误原因" + e.getMessage());
