@@ -18,10 +18,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,7 +76,8 @@ public class Game {
         for (String playerName : playList) {
             Player player = Bukkit.getPlayer(playerName);
             player.sendMessage(getLang("join-ok"));
-            player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            player.setHealth(player.getMaxHealth());
+            player.setHealth(20);
             player.setFoodLevel(20);
             player.setSaturation(20);
             if (location != null) player.teleport(location);
@@ -283,16 +285,29 @@ public class Game {
     }
 
     public void deadBox(Player player) {
-        Location location = player.getLocation();
-        Block block = location.getBlock();
-        location.getBlock().setType(Material.CHEST);
-        if (block.getState() instanceof Chest) {
-            Chest chest = (Chest) block.getState();
-            chest.setCustomName(player.getName() + " 的死亡物品");
-            for (int i = 0; i < 27; i++) {
-                chest.getInventory().setItem(i, player.getInventory().getItem(i + 9));
-            }
-        }
+        Location loc = player.getLocation();
+        Block block = loc.getBlock();
+
+        // 设置为大箱子（双箱）
+        block.setType(Material.CHEST);
+        Block block2 = block.getRelative(BlockFace.EAST);
+        block2.setType(Material.CHEST);
+
+        // 强制合并为双箱
+        Chest chest1 = (Chest) block.getState();
+        Chest chest2 = (Chest) block2.getState();
+        chest1.setCustomName(player.getName() + " 的死亡物品");
+        chest2.setCustomName(player.getName() + " 的死亡物品");
+        chest1.update();
+        chest2.update();
+
+        // 获取大箱子的完整物品栏
+        Inventory inv = chest1.getInventory().getHolder().getInventory();
+
+        // 转移玩家全部物品
+        inv.setContents(player.getInventory().getContents());
+
+        // 清空玩家背包
         player.getInventory().clear();
     }
 

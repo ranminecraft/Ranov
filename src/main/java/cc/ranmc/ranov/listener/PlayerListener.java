@@ -45,7 +45,7 @@ public class PlayerListener implements Listener {
         Player player = event.getEntity().getPlayer();
         Game game = GameUtil.getGame(player);
         if (game == null) return;
-        game.quit(player);
+        game.dead(player);
     }
 
 }
