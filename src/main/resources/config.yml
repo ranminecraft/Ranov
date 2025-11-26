@@ -36,3 +36,9 @@ leave-location:
 leave-wait-time: 3
 # 游戏开始多长时间之后开启撤离点（单位：秒）
 leave-start-time: 120
+# 宝箱
+chest-location:
+  - '100,100,0 普通宝箱'
+chest:
+  普通宝箱:
+    - '匕首 0.1 1~1'

@@ -23,6 +23,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -143,6 +144,7 @@ public class Game {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             createNpc();
             createMob();
+            createChest();
 
             for (String playerName : playList) {
                 if (locationList.isEmpty()) {
@@ -159,6 +161,44 @@ public class Game {
                 player.sendMessage(getLang("game-on"));
             }
         }, 20);
+    }
+
+    private void createChest() {
+        for (String line : plugin.getConfig().getStringList("chest-location")) {
+            String[] chestInfo = line.split(" ");
+            if (chestInfo.length < 2) {
+                print("&cCHEST配置错误 " + line);
+                continue;
+            }
+            Location location = getLocation(warWorld.getName() + "," + chestInfo[0]);
+            Block block = location.getBlock();
+            block.setType(Material.CHEST);
+            Chest chest = (Chest) block.getState();
+            chest.setCustomName(chestInfo[1]);
+            Inventory inv = chest.getInventory().getHolder().getInventory();
+            getChestItem(chestInfo[0]).forEach(inv::addItem);
+            chest.update();
+        }
+    }
+
+    private List<ItemStack> getChestItem(String name) {
+        List<ItemStack> list = new ArrayList<>();
+        for (String line : plugin.getConfig().getStringList("chest." + name)) {
+            try {
+                String[] itemInfo = line.split(" ");
+                if (Double.parseDouble(itemInfo[1]) < Math.random()) continue;
+                MythicMobs.inst().getMobManager().getMythicMob("");
+                ItemStack item = MythicMobs.inst().getItemManager().getItemStack(itemInfo[0]);
+                String[] parts = itemInfo[2].split("~");
+                int min = Integer.parseInt(parts[0].trim());
+                int max = Integer.parseInt(parts[1].trim());
+                item.setAmount((int) (Math.random() * (max - min + 1)) + min);
+                list.add(item);
+            } catch (Exception e) {
+                print("&cCHEST配置错误 " + line + " 错误原因" + e.getMessage());
+            }
+        }
+        return list;
     }
 
     private void createMob() {
@@ -288,12 +328,10 @@ public class Game {
         Location loc = player.getLocation();
         Block block = loc.getBlock();
 
-        // 设置为大箱子（双箱）
         block.setType(Material.CHEST);
         Block block2 = block.getRelative(BlockFace.EAST);
         block2.setType(Material.CHEST);
 
-        // 强制合并为双箱
         Chest chest1 = (Chest) block.getState();
         Chest chest2 = (Chest) block2.getState();
         chest1.setCustomName(player.getName() + " 的死亡物品");
@@ -301,13 +339,8 @@ public class Game {
         chest1.update();
         chest2.update();
 
-        // 获取大箱子的完整物品栏
         Inventory inv = chest1.getInventory().getHolder().getInventory();
-
-        // 转移玩家全部物品
         inv.setContents(player.getInventory().getContents());
-
-        // 清空玩家背包
         player.getInventory().clear();
     }
 
