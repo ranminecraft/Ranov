@@ -176,8 +176,8 @@ public class Game {
             Chest chest = (Chest) block.getState();
             chest.setCustomName(chestInfo[1]);
             Inventory inv = chest.getInventory().getHolder().getInventory();
-            getChestItem(chestInfo[1]).forEach(inv::addItem);
             chest.update();
+            getChestItem(chestInfo[1]).forEach(inv::addItem);
         }
     }
 
