@@ -3,7 +3,6 @@ main: cc.ranmc.ranov.Main
 description: '阿然定制24k纯钛合金超级无敌终终终终极版的Ranov插件'
 website: https://www.ranmc.cc/
 author: Ranica
-api-version: "1.13"
 version: ${project.version}
 depend: [Adyeshach, MythicMobs]
 softdepend: [PlaceholderAPI]
